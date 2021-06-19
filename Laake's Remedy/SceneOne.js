@@ -644,10 +644,11 @@ class SceneOne extends Phaser.Scene {
         
 
 
-    function GetKilled(){   
-
+    function GetKilled(){ 
+            //invincible = false;  
+            laakeHp = laakeHp -1;
                        if(invincible == false){
-                           laakeHp = laakeHp -1;
+                           
                            invincible = true ;
                             
                            player.setTint(0x589ac6 );
@@ -659,7 +660,7 @@ class SceneOne extends Phaser.Scene {
                             if (laakeHp == 5){
                                 potionVie.anims.play('health1',true);
                                 console.log('tu');}
-                            } 
+                             
                            if (laakeHp == 4){
                                 potionVie.anims.play('health2',true);
                                 console.log('vas');
@@ -682,6 +683,7 @@ class SceneOne extends Phaser.Scene {
                                 console.log('noob');
                                 setTimeOut(function(){this.scene.restart()},200000000);
                             }
+                        }
         }
                       
                    
@@ -689,7 +691,7 @@ class SceneOne extends Phaser.Scene {
 
     function tropfort(){
         if (invincible == true){
-            if( invincibletime <= 150){
+            if( invincibletime <= 10){
                 invincibletime ++ 
             }
             else{
