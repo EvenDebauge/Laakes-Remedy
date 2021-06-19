@@ -127,7 +127,7 @@ class SceneOne extends Phaser.Scene {
 
         //Ennemis
 
-        this.load.spritesheet('Loup','assets/animLoupGood.png',{frameWidth:315,frameHeight:256});
+        this.load.spritesheet('Loup','assets/animloupGood.png',{frameWidth:315,frameHeight:256});
         this.load.spritesheet('Vamp','assets/animvampGood.png',{frameWidth:170,frameHeight:256});
 
 
