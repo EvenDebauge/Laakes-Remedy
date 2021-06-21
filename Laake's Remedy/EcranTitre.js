@@ -2,14 +2,20 @@ var boutonJouer;
 var boutonOption;
 var boutonModes;
 var boutonRetour;
+var boutonNormal;
+var boutonSpeedrun;
+var speedRunMode = false;
 var jouer = false;
 var option = false;
 var mode = false;
 var retour = false;
+var normal = false;
+var speedrun = false;
 var musique;
-
 var fond;
 var tuto;
+var modes;
+var chrono;
 
 
 class EcranTitre extends Phaser.Scene {
@@ -25,13 +31,16 @@ class EcranTitre extends Phaser.Scene {
     preload ()
     {
         this.load.image('Fond', 'assets/Ecrantitre.png');
-        this.load.image('Tuto','assets/PanneauTuto.png')
+        this.load.image('Tuto','assets/PanneauTuto.png');
         this.load.audio('Fond_Sonore', 'assets/accords.mp3');
+        this.load.image('Panneaumodes','assets/PanneauMode.png');
 
         this.load.spritesheet('option', 'assets/Bouton_OptionSpritesheet.png', { frameWidth: 236, frameHeight: 88 });
         this.load.spritesheet('mode', 'assets/Bouton_ModeSpritesheet.png', { frameWidth: 236, frameHeight: 88 });
         this.load.spritesheet('jouer', 'assets/Bouton_JouerSpritesheet.png', { frameWidth: 236, frameHeight: 88 });
         this.load.spritesheet('retour', 'assets/BoutonRetourSpritesheet.png', { frameWidth:236, frameHeight: 88 });
+        this.load.spritesheet('normal', 'assets/Bouton_NormalSpritesheet.png', { frameWidth:236, frameHeight: 88 });
+        this.load.spritesheet('speedrun', 'assets/Bouton_SpeedrunSpritesheet.png', { frameWidth:236, frameHeight: 88 });
 
 
 
@@ -56,12 +65,15 @@ class EcranTitre extends Phaser.Scene {
         this.musique.play(musicConfig)
         fond = this.add.image(448, 224, 'Fond');
         tuto = this.add.image(448, 224, 'Tuto');
+        modes = this.add.image(448,245,'Panneaumodes');
         
 
         boutonJouer = this.add.sprite(746,55, 'jouer').setInteractive({ cursor: 'pointer' });
         boutonModes = this.add.sprite(746,125, 'mode').setInteractive({ cursor: 'pointer' });
         boutonOption= this.add.sprite(746,190, 'option').setInteractive({ cursor: 'pointer' });
         boutonRetour = this.add.sprite(746,55, 'retour').setInteractive({ cursor: 'pointer' });
+        boutonNormal = this.add.sprite(300,155, 'normal').setInteractive({ cursor: 'pointer' });
+        boutonSpeedrun= this.add.sprite(550,155, 'speedrun').setInteractive({ cursor: 'pointer' });
 
 
         /////////////////////bouton jouer////////////////////
@@ -111,7 +123,27 @@ const anims = this.anims;
         frameRate: 5,
       });
 
+    anims.create({
+        key: 'normalSimple',
+        frames: this.anims.generateFrameNumbers('normal', { start: 0, end: 0 }),
+        frameRate: 5,
+      });
+    anims.create({
+        key: 'normalDessus',
+        frames: this.anims.generateFrameNumbers('normal', { start: 1, end: 1 }),
+        frameRate: 5,
+      });
 
+    anims.create({
+        key: 'speedRunSimple',
+        frames: this.anims.generateFrameNumbers('speedrun', { start: 0, end: 0 }),
+        frameRate: 5,
+      });
+    anims.create({
+        key: 'speedRunDessus',
+        frames: this.anims.generateFrameNumbers('speedrun', { start: 1, end: 1 }),
+        frameRate: 5,
+      });
 
 
 }
@@ -133,23 +165,8 @@ update (){
         jouer = false;
         this.scene.start("SceneOne");
     }
-///////////////////////////////////bouton Mode//////////////////////////////////////////
 
-    boutonModes.on('pointerover', function (event) {
-        boutonModes.anims.play('modeDessus',true);
-    });
-
-    boutonModes.on('pointerout', function (event) {
-      boutonModes.anims.play('modeSimple',true);
-    });
-
-    boutonModes.on('pointerdown', function (pointer) {
-        mode = true;
-    });
-    if(mode == true){
-        mode = false;
-        this.scene.start("SceneOne");
-    }
+        
 
     ///////////////////////////////////bouton Retour//////////////////////////////////////////
 
@@ -167,14 +184,41 @@ update (){
     if(retour == true){
         retour = false;
         option = false;
+        mode = false;
     }
     if (retour == false){
         boutonRetour.setAlpha(0);
         boutonRetour.setDepth(5);
     }
 
+///////////////////////////////////bouton Mode//////////////////////////////////////////
 
-    ///////////////////////////////////bouton Commandes///////////////////////
+    boutonModes.on('pointerover', function (event) {
+        boutonModes.anims.play('modeDessus',true);
+    });
+
+    boutonModes.on('pointerout', function (event) {
+      boutonModes.anims.play('modeSimple',true);
+    });
+
+    boutonModes.on('pointerdown', function (pointer) {
+        mode = true;
+    });
+    if(mode == true){
+        //mode = false;
+        boutonRetour.setAlpha(1);
+        boutonNormal.setAlpha(1).setAlpha(4);
+        boutonSpeedrun.setAlpha(1).setAlpha(4);
+        modes.setAlpha(1).setDepth(3);
+        
+    }
+    if (mode == false){        
+        boutonSpeedrun.setAlpha(0);        
+        boutonNormal.setAlpha(0);
+        modes.setAlpha(0).setDepth(0);
+    }
+
+    ///////////////////////////////////bouton Option///////////////////////
 
 
     boutonOption.on('pointerover', function (event) {
@@ -195,6 +239,53 @@ update (){
     }
     if (option == false){
         tuto.setAlpha(0).setDepth(0);
+    }
+
+    ///////////////////////////////////bouton Normal///////////////////////
+
+    boutonNormal.on('pointerover', function (event) {
+        boutonNormal.anims.play('normalDessus',true);
+    });
+
+    boutonNormal.on('pointerout', function (event) {
+      boutonNormal.anims.play('normalSimple',true);
+    });
+
+    boutonNormal.on('pointerdown', function (pointer) {
+        normal = true;
+    });
+    if(normal == true){
+        normal = false;
+        speedRunMode = false;
+        this.scene.start('SceneOne');
+    }
+    if (normal == false){
+
+        boutonNormal.setDepth(5);
+    }
+
+///////////////////////////////////bouton SpeedRun///////////////////////
+
+
+    boutonSpeedrun.on('pointerover', function (event) {
+        boutonSpeedrun.anims.play('speedRunDessus',true);
+    });
+
+    boutonSpeedrun.on('pointerout', function (event) {
+      boutonSpeedrun.anims.play('speedRunSimple',true);
+    });
+
+    boutonSpeedrun.on('pointerdown', function (pointer) {
+        speedrun = true;
+    });
+    if(speedrun == true){
+        normal = false;
+        speedRunMode = true;
+        this.scene.start('SceneOne');
+    }
+    if (speedrun == false){
+
+        boutonSpeedrun.setDepth(5);
     }
 
 
