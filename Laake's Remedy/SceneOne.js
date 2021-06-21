@@ -13,6 +13,12 @@ var brouillard3;
 var ingredients;
 var ingredients2;
 
+//Speedrun
+var speedrunTimer = 0;
+var speedrunMinute = 0;
+var textTimer = 0;
+var loopTimer;
+
 
 
 //Var Verouillage porte
@@ -96,6 +102,7 @@ class SceneOne extends Phaser.Scene {
         
         //Test
         this.load.spritesheet('TestPlayer','assets/SScourseFinale.png',{frameWidth:327,frameHeight:279});
+        this.load.spritesheet('Larare','assets/Larare.png',{frameWidth:450,frameHeight:500});
         this.load.spritesheet('Death','assets/AnimMortLaake.png',{frameWidth:356,frameHeight:364});
         this.load.spritesheet('Rat','assets/animRatFinale.png',{frameWidth:176,frameHeight:256});
         this.load.spritesheet('Repos','assets/SSRepos.png',{frameWidth:186,frameHeight:279});
@@ -261,6 +268,18 @@ class SceneOne extends Phaser.Scene {
         this.physics.add.overlap(ingredients,player,BoisTaPotion);
         this.physics.add.overlap(ingredients2,player,BoisTaPotion);
 
+        if(speedrun == true){
+
+            textTimer = this.add.text(122,98).setScrollFactor(0).setDepth(6).setTint(030303);
+
+            loopTimer = this.time.addEvent({delay : 1000, callback : onEvent,callbackScope : this,loop :true});
+
+            function onEvent(){
+                speedrunTimer += 1;
+            }
+
+        }
+
 
         
 
@@ -343,11 +362,13 @@ class SceneOne extends Phaser.Scene {
         });
 
         this.anims.create({
-            key:'Repos',
-            frames: this.anims.generateFrameNumbers('repos',{start :0, end :6}),
-            frameRate: 10,
-            repeat:0
+            key:'Boss',
+            frames:this.anims.generateFrameNumbers('Larare',{start : 0, end : 3}),
+            frameRate: 20,
+            repeat: 1
         });
+
+
 
         keys = this.input.keyboard.addKeys({
             left: Phaser.Input.Keyboard.KeyCodes.Q,
@@ -416,12 +437,13 @@ class SceneOne extends Phaser.Scene {
             player.setTint(0xFFFFFF)
         }
 
-
-       //if (zone_Loup.body.touching.none && laakeHp>= 2){
-       //    ennemy_aggro = false;
-       //    tweens_ennemy.play();
-       //}
-       //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
+        if (speedrun == true){
+            textTimer.setText('Timer: '+ speedrunMinute + ':' + speedrunTimer);
+        }
+        if (speedrunTimer === 60){
+            speedrunTimer = 0;
+            speedrunMinute +=1;
+        }
 
 
        
@@ -526,6 +548,8 @@ class SceneOne extends Phaser.Scene {
             }
             
             if (gameOver== true){
+                speedrunMinute = 0;
+                speedrunTimer = 0;
                 player.anims.play("Mort",true);
                 setTimeout(function(){
                     restart = true; 
