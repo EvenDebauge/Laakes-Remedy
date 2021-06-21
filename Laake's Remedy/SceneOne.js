@@ -2,7 +2,6 @@
 var player;
 var Boss;
 var Fog;
-var plateformeTest;
 var keys;
 var Brouillard;
 var brouillard2;
@@ -12,6 +11,7 @@ var brouillard3;
 
 //Var Loots
 var ingredients;
+var ingredients2;
 
 
 
@@ -25,30 +25,31 @@ var cle =0;
 var loups;
 var loup;
 var FaimLoup = false;
+var rats;
 var rat;
-var vampire;
-var statut_Boss;
+var FaimRat = false;
+//var vampire;
+var vamps;
+var vamp;
+var FaimVamp = false;
+var statut_Boss = true;
 
 
 
 //var zone;
+var chill;
+var notChill;
+var warning = false;
+var zone_Boss1;
+var zone_Boss2;
+var zone_Boss3;
 //var zone_Loup;
-var zone_vampire;
-var vampireRush = true;
+//var zone_vampire;
+//var vampireRush = true;
 var zone_rat;
 var zoneRush;
 var rat_aggro;
 // VariablesVies
-var viePleine1;
-var vieVide1;
-var viePleine2;
-var vieVide2;
-var viePleine3;
-var vieVide3;
-var viePleine4;
-var vieVide4;
-var viePleine5;
-var vieVide5;
 var laakeHp = 5;
 var potionVie;
 
@@ -60,23 +61,18 @@ var invincibletime = 0;
 var doubleJumps = true;
 var allowDoubleJump = false;
 var gameOver = false;
+var restart = false;
 
 //Var Plateformes
-var platformeTombe;
-var platformeChute;
-var plateformeJump;
-var plateformeTrampo;
-var plateformeMouvX;
-var plateformeMouvY;
 var tweens_plateformes;
 
 // Var Tweens
 var tweens_ennemy;
 var statut_Ennemi = true;
-var vamp_tweens;
+//var vamp_tweens;
 var rat_tweens;
 var ennemy_aggro = false;
-var vampire_aggro = false;
+//var vampire_aggro = false;
 var rat_aggro = false;
 var ratRush;
 //var cursors;
@@ -100,11 +96,9 @@ class SceneOne extends Phaser.Scene {
         
         //Test
         this.load.spritesheet('TestPlayer','assets/SScourseFinale.png',{frameWidth:327,frameHeight:279});
-        this.load.spritesheet('TestPlayer','assets/AnimMortLaake.png',{frameWidth:327,frameHeight:279});
+        this.load.spritesheet('Death','assets/AnimMortLaake.png',{frameWidth:356,frameHeight:364});
         this.load.spritesheet('Rat','assets/animRatFinale.png',{frameWidth:176,frameHeight:256});
         this.load.spritesheet('Repos','assets/SSRepos.png',{frameWidth:186,frameHeight:279});
-        this.load.image('PlateformeTest', 'assets/PlateformeTest.png');
-        this.load.image('PotionTest','assets/Potiontest.png');
         this.load.spritesheet('PotionVie','assets/SpriteSheetPotion.png',{frameWidth:128,frameHeight:107});
 
         //Brouillard
@@ -114,9 +108,9 @@ class SceneOne extends Phaser.Scene {
         //this.load.image('zone','assets/zone.png');
        
         //Vie Joueur
-        this.load.image('ViePleine','assets/ViePleine.png');
-        this.load.image('VieVide','assets/VieVide.png');
-        this.load.image('GameOver','assets/GameOverScreen.png');
+        this.load.image('interface','assets/interface.png');
+        this.load.image('warning','assets/Warning.png'); 
+        this.load.image('chill','assets/Chill.png'); 
         this.load.image('cle','assets/cle.png');
         this.load.image('PotionRemede','assets/PotionRemede.png');
         this.load.image('Potionvie1','assets/Potion1.png');
@@ -159,12 +153,29 @@ class SceneOne extends Phaser.Scene {
         for (const loup of enemieObjects) {
         this.loups.create(loup.x, loup.y, 'Loup').setScale(0.4).setDepth(2);
         }
+
+        const enemieObjects1 = map.getObjectLayer('vamp').objects;
+        this.vamps = this.physics.add.group({
+            allowGravity: false
+        }); 
+        for (const vamp of enemieObjects1) {
+        this.vamps.create(vamp.x, vamp.y, 'Vamp').setScale(0.4).setDepth(2);
+        }
+
+        const enemieObjects2 = map.getObjectLayer('rat').objects;
+        this.rats = this.physics.add.group({
+            allowGravity: true
+        }); 
+        for (const rat of enemieObjects2) {
+        this.rats.create(rat.x, rat.y, 'Rat').setScale(0.4).setDepth(2);
+        }
         Mur.setCollisionByExclusion(-1,true).setDepth(2);
         Plateforme_Tween.setCollisionByExclusion(-1,true).setDepth(2);
         Plateformes.setCollisionByExclusion(-1,true).setDepth(2);
         Porte.setCollisionByExclusion(-1,true).setDepth(2);
         MurChange.setCollisionByExclusion(-1,true).setDepth(2);
         SafeZone.setCollisionByExclusion(-1,true).setDepth(2);
+
         
 
 
@@ -172,39 +183,40 @@ class SceneOne extends Phaser.Scene {
         //Spritesheet de Laake's Remedy
         player = this.physics.add.sprite(100, 1660, 'TestPlayer').setScale(0.4).setDepth(2).setSize(200,200).setOffset(50,25);
         //loup = this.physics.add.sprite(1900, 1660, 'Loup').setScale(0.4).setDepth(2);
-        vampire = this.physics.add.sprite(1410,1190,'Vamp').setDepth(2).setScale(0.4);
-        rat = this.physics.add.sprite(2510,269,'Rat').setDepth(2).setScale(0.4);
+        //vampire = this.physics.add.sprite(1410,1190,'Vamp').setDepth(2).setScale(0.4);
+        //rat = this.physics.add.sprite(2510,269,'Rat').setDepth(2).setScale(0.4);
 
         locker = this.physics.add.sprite(1108, 1490, 'cle').setScale(0.4).setDepth(2);
         locker.body.setAllowGravity(false);
-    
+
+        this.add.image(170,90,'interface').setDepth(4).setScrollFactor(0);
+        notChill = this.add.image(75,90,'warning').setDepth(4).setScrollFactor(0).setScale(0.5).setAlpha(0);
+        chill = this.add.image(75,115,'chill').setDepth(4).setScrollFactor(0);
 
         this.add.image(0,0,'VilleDevant').setScrollFactor(0.5).setOrigin(0).setDepth(1);
         this.add.image(2880,0,'VilleDevant').setScrollFactor(0.5).setOrigin(0).setDepth(1);
         this.add.image(11390,0,'VilleDevant').setScrollFactor(0.5).setOrigin(0).setDepth(1);
+        this.add.image(14100,0,'VilleDevant').setScrollFactor(0.5).setOrigin(0).setDepth(1);
         this.add.image(0,0,'VilleDerriere').setScrollFactor(0.3).setOrigin(0).setDepth(0).setScrollFactor(0.40);
         this.add.image(2880,0,'VilleDerriere').setScrollFactor(0.3).setOrigin(0).setDepth(0).setScrollFactor(0.40);
         this.add.image(11390,0,'VilleDerriere').setScrollFactor(0.3).setOrigin(0).setDepth(0).setScrollFactor(0.40);
+        this.add.image(14100,0,'VilleDerriere').setScrollFactor(0.3).setOrigin(0).setDepth(0).setScrollFactor(0.40);
 
 
-        viePleine1 = this.physics.add.staticGroup();
-        viePleine2 = this.physics.add.staticGroup();
-        viePleine3 = this.physics.add.staticGroup();
-        viePleine4 = this.physics.add.staticGroup();
-        viePleine5 = this.physics.add.staticGroup();
        
-        potionVie = this.physics.add.sprite(20,40,'PotionVie').setDepth(5).setScrollFactor(0);
+        potionVie = this.physics.add.sprite(290,90,'PotionVie').setDepth(5).setScrollFactor(0);
         potionVie.body.setAllowGravity(false);
         ingredients = this.physics.add.image(1871,139, 'PotionRemede').setSize(120,120).setDepth(1).setScale(0.25);
         ingredients.body.setAllowGravity(false);
-        gameOver = this.add.image('GameOver');
+
+        ingredients2= this.physics.add.image(7970,139, 'PotionRemede').setSize(120,120).setDepth(1).setScale(0.25);
+        ingredients2.body.setAllowGravity(false);
 
 
         //camera follow joueur
         this.physics.world.setBounds(0,0,14370,1824);
         this.cameras.main.startFollow(player,true,0.05,0.05);
         this.cameras.main.setBounds(0, 0,14370,1824);
-
 
 
         player.setCollideWorldBounds(true); 
@@ -214,66 +226,43 @@ class SceneOne extends Phaser.Scene {
         brouillard2 = this.Fog.create(0,0,'Brouillard2').setDepth(3);
         brouillard3 = this.Fog.create(0,0,'Brouillard3').setDepth(3);
         this.plateformes = this.physics.add.staticGroup();
-        plateformeTest = this.plateformes.create(150,550,'PlateformeTest').setDepth(0);
-        plateformeTest = this.plateformes.create(850,550,'PlateformeTest').setDepth(0);
-        plateformeTest = this.plateformes.create(1250,520,'PlateformeTest').setDepth(0);
-        plateformeTest = this.plateformes.create(500,520,'PlateformeTest').setDepth(0);
 
-        //zone_Loup = this.add.zone(1860, 1660).setSize(650, 100);
-        //this.physics.world.enable(zone_Loup);
-        //zone_Loup.body.setAllowGravity(false);
-        //zone_Loup.body.moves = false;
-//
-
-        vampire.body.setAllowGravity(false);
-        zone_vampire = this.add.zone(1410,1579).setSize(850,200);
-        this.physics.world.enable(zone_vampire);
-        zone_vampire.body.setAllowGravity(false);
-        zone_vampire.body.moves = false;
-
-        rat.body.setAllowGravity(false);
-        zone_rat = this.add.zone(2510,169).setSize(450,100);
-        this.physics.world.enable(zone_rat);
-        zone_rat.body.setAllowGravity(false);
-        zone_rat.body.moves = false;
-
-        this.physics.add.collider(player, plateformeTest).setOffSet;
         this.physics.add.collider(player,Mur);
         this.physics.add.collider(player,Plateforme_Tween);
         this.physics.add.collider(locker,Plateformes);
         this.physics.add.collider(player,Plateformes);
         this.physics.add.collider(player,Porte);
         this.physics.add.collider(this.loups,Mur);
-  
+        this.physics.add.collider(this.vamps,Mur);
+        this.physics.add.collider(this.rats,Mur);
 
-   
 
-            
-        this.physics.add.collider(player,this.loups,AttaqueEnnemi,null,this);
-        this.physics.add.collider(this.loups,player,GetKilled,null,this);
+        zone_Boss1 = this.add.zone(12418,658).setSize(850,200);
+        this.physics.world.enable(zone_Boss1);
+        zone_Boss1.body.setAllowGravity(false);
+        zone_Boss1.body.moves = false;
+
+        zone_Boss2 = this.add.zone(13774,658).setSize(350,200);
+        this.physics.world.enable(zone_Boss2);
+        zone_Boss2.body.setAllowGravity(false);
+        zone_Boss2.body.moves = false;
+
+        zone_Boss3 = this.add.zone(12312,206).setSize(3897,200);
+        this.physics.world.enable(zone_Boss3);
+        zone_Boss3.body.setAllowGravity(false);
+        zone_Boss3.body.moves = false;
+
+        this.physics.add.overlap(player,this.loups,GetKilledLoup,null,this);
+        this.physics.add.overlap(player,this.vamps,GetKilledVamp,null,this);
+        this.physics.add.overlap(player,this.rats,GetKilledRat,null,this);
         this.physics.add.collider(player,locker,OuverturePorte);
-        this.physics.add.collider(player,rat,AttaqueRat,null,this);
-        this.physics.add.collider(player,rat,GetKilled,null,this);
-        this.physics.add.collider(player,vampire,AttaqueVamp,null,this);
-        this.physics.add.collider(player,vampire,GetKilled,null,this);
-        this.physics.add.collider(vampire,plateformeTest);
-        //this.physics.add.overlap(player,zone_Loup,LoupRush,null,this);
-        this.physics.add.overlap(player,zone_vampire,VampRush,null,this);
-        this.physics.add.overlap(player,zone_rat,RatRush,null,this);
+
 
         this.physics.add.overlap(ingredients,player,BoisTaPotion);
+        this.physics.add.overlap(ingredients2,player,BoisTaPotion);
 
-        platformeTombe = this.physics.add.group();
 
-        this.plateformeMouvX = this.physics.add.group();
-        plateformeMouvX = this.plateformeMouvX.create(350,950,'PlateformeTest').setDepth(0);
-        plateformeMouvX.body.setAllowGravity(false);
-        this.physics.add.collider(player, plateformeMouvX);
         
-
-        platformeChute = platformeTombe.create(700,550,'PlateformeTest').setDepth(0);
-        platformeChute.body.allowGravity = false;
-        this.physics.add.collider(platformeTombe,player,Chute());
 
         function OuverturePorte(){
             cle = cle+1
@@ -286,41 +275,6 @@ class SceneOne extends Phaser.Scene {
             
         }
 
-        function AttaqueEnnemi(player, loup){ 
-            if (loup.body.touching.up && player.body.touching.down){
-                loup.setVisible(false);
-                loup.setVelocityX(0);
-                statut_Ennemi = false; 
-                if (statut_Ennemi == true){
-                    ennemy_aggro = true;
-                    this.physics.moveToObject(loup, player, 200);
-                    //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
-                }
-
-        
-                if(statut_Ennemi == false)
-                {
-                    loup.body.destroy();
-                    FaimLoup = false;
-                    loup.setVelocityX(0);
-                    console.log('ennemi a pu');
-                    
-
-                }
-                               
-            }
-        }
-        function AttaqueVamp(player, vampire){ 
-            if (vampire.body.touching.up && player.body.touching.down){
-                vampire.body.destroy();
-            }
-        }
-
-        function AttaqueRat(player, rat){ 
-            if (rat.body.touching.down && player.body.touching.down){
-                rat.body.destroy();
-            }
-        }
 
 
         this.anims.create({
@@ -331,9 +285,9 @@ class SceneOne extends Phaser.Scene {
         });
 
         this.anims.create({
-            key:'Death',
-            frames:this.anims.generateFrameNumbers('TestPlayer',{start : 0, end : 24}),
-            frameRate: 20,
+            key:'Mort',
+            frames:this.anims.generateFrameNumbers('Death',{start : 0, end : 24}),
+            frameRate: 30,
             repeat: 0
         });
 
@@ -352,7 +306,7 @@ class SceneOne extends Phaser.Scene {
         });
 
         this.anims.create({
-            key:'MoveRat',
+            key:'Rat',
             frames: this.anims.generateFrameNumbers('Rat',{start :0, end :5}),
             frameRate: 10,
             repeat:0
@@ -431,14 +385,14 @@ class SceneOne extends Phaser.Scene {
         
 
         
-        vamp_tweens= this.tweens.add({
-            targets: vampire,
-            x: 1802,
-            duration: 2000,
-            ease: 'Sine.easeInOut',
-            repeat: -1,
-            yoyo: true
-        });
+        //vamp_tweens= this.tweens.add({
+        //    targets: vampire,
+        //    x: 1802,
+        //    duration: 2000,
+        //    ease: 'Sine.easeInOut',
+        //    repeat: -1,
+        //    yoyo: true
+        //});
 
         rat_tweens = this.tweens.add({
             targets: rat,
@@ -449,32 +403,19 @@ class SceneOne extends Phaser.Scene {
             yoyo: false
         });
 
-        
-        this.tweens.add({
-            targets: plateformeMouvX,
-            x: 800,
-            duration: 2000,
-            ease: 'Sine.easeInOut',
-            repeat: -1,
-            yoyo: true
-        });
-
-        this.tweens.add({
-            targets: plateformeMouvY,
-            y: 400,
-            duration: 2000,
-            ease: 'Sine.easeInOut',
-            repeat: -1,
-            yoyo: true
-        });
-
-
-    
+       
 
     }
     update(){
+        //vampire.anims.play('Vamp',true);
+            
+        if (invincible == true){
+            player.setTint(0x589ac6 );
+        }
+        else{
+            player.setTint(0xFFFFFF)
+        }
 
-        vampire.anims.play('Vamp',true);
 
        //if (zone_Loup.body.touching.none && laakeHp>= 2){
        //    ennemy_aggro = false;
@@ -493,24 +434,24 @@ class SceneOne extends Phaser.Scene {
         //    loup.setFlipX(false);
         //}
 
-        if (zone_vampire.body.touching.none && laakeHp>= 2){
-                   vampire_aggro = false;
-                   vamp_tweens.play();
-                   vampire.x = 1410;
-                   vampire.y = 1390;
+        //if (zone_vampire.body.touching.none && laakeHp>= 2){
+        //           vampire_aggro = false;
+        //           vamp_tweens.play();
+        //           vampire.x = 1410;
+        //           vampire.y = 1390;
+//
+        //       }
+        //
+        //zone_vampire.body.debugBodyColor = zone_vampire.body.touching.none ? 0x00ffff : 0xffff00;
 
-               }
-        
-        zone_vampire.body.debugBodyColor = zone_vampire.body.touching.none ? 0x00ffff : 0xffff00;
-
-        if (zone_rat.body.touching.none && laakeHp>= 2){
+        /*if (zone_rat.body.touching.none && laakeHp>= 2){
             rat_aggro = false;
             rat.x = 2510;
             rat.y = 269;
             rat_tweens.pause();
             
         }
-        zone_rat.body.debugBodyColor = zone_rat.body.touching.none ? 0x00ffff : 0xffff00;
+        zone_rat.body.debugBodyColor = zone_rat.body.touching.none ? 0x00ffff : 0xffff00;*/
       
         if (keys.left.isDown)
             {
@@ -523,7 +464,7 @@ class SceneOne extends Phaser.Scene {
             else if (keys.right.isDown){
                 player.setVelocityX(260);
                 player.anims.play('Move',true);
-                rat.anims.play('MoveRat',true); 
+                //rat.anims.play('Rat',true); 
                 //loup.anims.play('Wolf',true);
                 player.setFlipX(false);
 
@@ -571,6 +512,8 @@ class SceneOne extends Phaser.Scene {
                 brouillard3.x = player.x;
                 brouillard3.y = player.y - 200; 
             }
+                
+            
             
 
             
@@ -582,9 +525,30 @@ class SceneOne extends Phaser.Scene {
 
             }
             
+            if (gameOver== true){
+                player.anims.play("Mort",true);
+                setTimeout(function(){
+                    restart = true; 
+                    console.log('Restart'+ restart);}, 1000);
+                    if (restart ==true){
+                        gameOver = false;
+                        this.scene.restart();
+                        restart = false;
+                    }
+                    
+            }
+
+            if (warning == true){
+                chill.setAlpha(0);
+                notChill.setAlpha(1);
+            }
+            else{
+                chill.setAlpha(1);
+                notChill.setAlpha(0);
+            }
             
 
-            tropfort();
+            //tropfort();
 
         for (const loup of this.loups.children.entries) {
             if (FaimLoup == false){ 
@@ -612,10 +576,14 @@ class SceneOne extends Phaser.Scene {
     
                 if( loup.direction ==='droite' && player.x - loup.x <481 && player.x - loup.x > 0 && loup.y - player.y < 64 && loup.y - player.y > -64){
                     FaimLoup = true;
+                    warning = true;
+
     
                 }
                 if( loup.direction ==='gauche' && loup.x - player.x < 481 && loup.x - player.x > 0 && loup.y - player.y < 64 && loup.y - player.y > -64 ){
                     FaimLoup = true;
+                    warning = true;
+
                 }
             }
             if (FaimLoup === true){
@@ -637,25 +605,137 @@ class SceneOne extends Phaser.Scene {
                 }
     
         }
+        for (const vamp of this.vamps.children.entries) {
+            if (FaimVamp == false){ 
 
+                if (vamp.body.blocked.right) {
+                    vamp.direction = 'gauche';
+                    vamp.flipX= false;
+                }
+                if (vamp.body.blocked.left) {
+                    vamp.direction = 'droite';
+                    vamp.flipX= true;
+                }
+
+                else if (vamp.direction === 'gauche'){
+                    vamp.setVelocityX(-200);
+                    vamp.anims.play('Vamp', true);
+
+                }
+                else{
+                    vamp.setVelocityX(200);
+                    vamp.anims.play('Vamp', true);
+
+                }
+
+
+                if( vamp.direction ==='droite' && player.x - vamp.x <481 && player.x - vamp.x > 0 && vamp.y - player.y < 64 && vamp.y - player.y > -64){
+                    FaimVamp = true;
+                    warning = true;
+
+
+
+                }
+                if( vamp.direction ==='gauche' && vamp.x - player.x < 481 && vamp.x - player.x > 0 && vamp.y - player.y < 64 && vamp.y - player.y > -64 ){
+                    FaimVamp = true;
+                    warning = true;
+
+                }
+            }
+            if (FaimVamp === true){
+                if (player.x - vamp.x <481 && player.x - vamp.x > 32 && vamp.y - player.y < 321 && vamp.y - player.y > -64){
+                    vamp.setVelocityX(350);
+                    vamp.flipX= false;
+                    vamp.anims.play('Vamp', true);
+                }
+                else if (vamp.x - vamp.x < 481 && vamp.x - player.x > 32 && vamp.y - player.y < 321 && vamp.y - player.y > -64 ){
+                    vamp.setVelocityX(-350);
+                    vamp.flipX= true;
+                    vamp.anims.play('Vamp', true);
+                }
+
+
+            }
+            else{
+                FaimVamp= false;
+                }
+
+    }
+    for (const rat of this.rats.children.entries) {
+        if (FaimRat == false){ 
+
+            if (rat.body.blocked.right) {
+                rat.direction = 'gauche';
+                rat.flipX= false;
+            }
+            if (rat.body.blocked.left) {
+                rat.direction = 'droite';
+                rat.flipX= true;
+            }
+
+            else if (rat.direction === 'gauche'){
+                rat.setVelocityY(-200);
+                rat.anims.play('Rat', true);
+
+            }
+            else{
+                rat.setVelocityY(-200);
+                rat.anims.play('Rat', true);
+
+            }
+
+
+            if( rat.direction ==='droite' && player.x - rat.x <481 && player.x - rat.x > 0 && rat.y - player.y < 64 && rat.y - player.y > -64){
+                FaimRat = true;
+                warning = true;
+
+
+            }
+            if( rat.direction ==='gauche' && rat.x - player.x < 481 && rat.x - player.x > 0 && rat.y - player.y < 64 && rat.y - player.y > -64 ){
+                FaimRat = true;
+                warning = true;
+
+            }
+        }
+        if (FaimRat === true){
+            if (player.x - rat.x <481 && player.x - rat.x > 32 && rat.y - player.y < 321 && rat.y - player.y > -64){
+                rat.setVelocityY(350);
+                rat.flipX= false;
+                rat.anims.play('Rat', true);
+            }
+            else if (rat.x - rat.x < 481 && rat.x - player.x > 32 && rat.y - player.y < 321 && rat.y - player.y > -64 ){
+                rat.setVelocityX(350);
+                rat.flipX= true;
+                rat.anims.play('Rat', true);
+            }
+
+
+        }
+        else{
+            FaimRat= false;
+            }
+
+    }
                
         }
     }
+
+
+
+           
+
+
         
 
 
-    function GetKilled(){ 
+    function GetKilledLoup(player,loup){ 
             //invincible = false;  
-            laakeHp = laakeHp -1;
-                       if(invincible == false){
-                           
-                           invincible = true ;
-                            
-                           player.setTint(0x589ac6 );
-                           //viePleine3.setDepth(0);
-                           //vieVide3.setDepth(5)
-                           
-                           console.log(laakeHp);          
+           
+            console.log('oui ca marche')
+            //if (invincible == true){
+            //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
+            //    }         
+                            console.log(laakeHp);          
                             console.log('tu');
                             if (laakeHp == 5){
                                 potionVie.anims.play('health1',true);
@@ -676,30 +756,166 @@ class SceneOne extends Phaser.Scene {
                             }
                            if (laakeHp == 1){
                                 potionVie.anims.play('health5',true);
-                                player.setAlpha(0.3);
-                                vision = false;   
-                                setTimeout(function(){player.anims.play('Death',true)}, 0);
                                 gameOver = true;
                                 console.log('noob');
-                                setTimeOut(function(){this.scene.restart()},200000000);
+                                //this.scene.restart();
+                            }
+                       if(invincible == false){
+                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           invincible = true ;
+                           laakeHp = laakeHp -1; 
+
+                           //viePleine3.setDepth(0);
+                           //vieVide3.setDepth(5)
+                           
+                            
+                            
+                            
+                            
+                        }
+                        if (loup.body.touching.up && player.body.touching.down){
+                            laakeHp = laakeHp + 1;
+                            loup.setVisible(false);
+                            loup.setVelocityX(0); 
+                            //loup.body.disableBody(true,true);
+                            loup.destroy();
+                            statut_Ennemi = false; 
+                            if (statut_Ennemi == true){
+                                ennemy_aggro = true;
+                                this.physics.moveToObject(loup, player, 200);
+                                
+                               
+                                //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
+                            }
+                        }
+        }
+
+        function GetKilledVamp(player,vamp){ 
+            //invincible = false;  
+           
+            console.log('oui ca marche')
+            //if (invincible == true){
+            //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
+            //    }         
+                            console.log(laakeHp);          
+                            console.log('tu');
+                            if (laakeHp == 5){
+                                potionVie.anims.play('health1',true);
+                                console.log('tu');}
+                             
+                           if (laakeHp == 4){
+                                potionVie.anims.play('health2',true);
+                                console.log('vas');
+                            }
+                           if (laakeHp == 3){
+                                potionVie.anims.play('health3',true);
+                               console.log('presque');
+                            }
+                           if (laakeHp == 2){
+                                potionVie.anims.play('health4',true);
+                               console.log('mourir');
+                               
+                            }
+                           if (laakeHp == 1){
+                                potionVie.anims.play('health5',true);  
+                                gameOver = true;
+                                console.log('noob');
+                                //this.scene.restart();
+                            }
+                       if(invincible == false){
+                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           invincible = true ;
+                           laakeHp = laakeHp -1; 
+
+                           //viePleine3.setDepth(0);
+                           //vieVide3.setDepth(5)
+                           
+                            
+                            
+                            
+                            
+                        }
+                        if (vamp.body.touching.up && player.body.touching.down){
+                            laakeHp = laakeHp + 1;
+                            vamp.setVisible(false);
+                            vamp.setVelocityX(0); 
+                            //loup.body.disableBody(true,true);
+                            vamp.destroy();
+                            statut_Ennemi = false; 
+                            if (statut_Ennemi == true){
+                                ennemy_aggro = true;
+                                this.physics.moveToObject(vamp, player, 200);
+                                
+                               
+                                //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
+                            }
+                        }
+        }
+
+        function GetKilledRat(player,rat){ 
+            //invincible = false;  
+           
+            console.log('oui ca marche')
+            //if (invincible == true){
+            //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
+            //    }         
+                            console.log(laakeHp);          
+                            console.log('tu');
+                            if (laakeHp == 5){
+                                potionVie.anims.play('health1',true);
+                                console.log('tu');}
+                             
+                           if (laakeHp == 4){
+                                potionVie.anims.play('health2',true);
+                                console.log('vas');
+                            }
+                           if (laakeHp == 3){
+                                potionVie.anims.play('health3',true);
+                               console.log('presque');
+                            }
+                           if (laakeHp == 2){
+                                potionVie.anims.play('health4',true);
+                               console.log('mourir');
+                               
+                            }
+                           if (laakeHp == 1){
+                                potionVie.anims.play('health5',true); 
+                                gameOver= true;
+                                console.log('noob');
+                                //this.scene.restart();
+                            }
+                       if(invincible == false){
+                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           invincible = true ;
+                           laakeHp = laakeHp -1; 
+
+                           //viePleine3.setDepth(0);
+                           //vieVide3.setDepth(5)
+                           
+                            
+                            
+                            
+                            
+                        }
+                        if (rat.body.touching.down && player.body.touching.up){
+                            laakeHp = laakeHp + 1;
+                            rat.setVisible(false);
+                            rat.setVelocityX(0); 
+                            //loup.body.disableBody(true,true);
+                            rat.destroy();
+                            statut_Ennemi = false; 
+                            if (statut_Ennemi == true){
+                                ennemy_aggro = true;
+                                this.physics.moveToObject(rat, player, 200);
+                                
+                               
+                                //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
                             }
                         }
         }
                       
                    
 
-
-    function tropfort(){
-        if (invincible == true){
-            if( invincibletime <= 10){
-                invincibletime ++ 
-            }
-            else{
-                invincibletime = 0
-                invincible= false
-            }
-        }
-    }
     function Chute(platformeTombe,player){
             platformeTombe = true;
            
@@ -713,16 +929,16 @@ class SceneOne extends Phaser.Scene {
        //    tweens_ennemy.pause();
        //}
 
-        function VampRush ()
-        {
-            Vamp_aggro = true;
-            this.physics.moveToObject(vampire, player, 320);
-            zone_vampire.body.debugBodyColor = zone_vampire.body.touching.none ? 0x00ffff : 0xffff00;
-            vamp_tweens.pause();
-
-            
-        }
-
+        //function VampRush ()
+        //{
+        //    Vamp_aggro = true;
+        //    this.physics.moveToObject(vampire, player, 320);
+        //    zone_vampire.body.debugBodyColor = zone_vampire.body.touching.none ? 0x00ffff : 0xffff00;
+        //    vamp_tweens.pause();
+//
+        //    
+        //}
+//
         function RatRush ()
         {
             rat_aggro = true;
@@ -743,15 +959,13 @@ class SceneOne extends Phaser.Scene {
                 ingredients.body.destroy();
        
             }
+            if (remede == 2){
+                Brouillard.setAlpha(0);
+                brouillard2.setAlpha(0);
+                brouillard3.setDepth(2);
+                ingredients2.disableBody(true,true);
+                ingredients2.destroy();
+            }
 
         }
 
-
-    
-
-
-
-    
-
-
-        
