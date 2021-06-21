@@ -49,6 +49,10 @@ var warning = false;
 var zone_Boss1;
 var zone_Boss2;
 var zone_Boss3;
+var atkBoss1;
+var atkBoss2;
+var atkBoss3;
+var bossattaque = false;
 //var zone_Loup;
 //var zone_vampire;
 //var vampireRush = true;
@@ -102,7 +106,7 @@ class SceneOne extends Phaser.Scene {
         
         //Test
         this.load.spritesheet('TestPlayer','assets/SScourseFinale.png',{frameWidth:327,frameHeight:279});
-        this.load.spritesheet('Larare','assets/Larare.png',{frameWidth:450,frameHeight:500});
+        this.load.spritesheet('Larare','assets/Larare.png',{frameWidth:300,frameHeight:500});
         this.load.spritesheet('Death','assets/AnimMortLaake.png',{frameWidth:356,frameHeight:364});
         this.load.spritesheet('Rat','assets/animRatFinale.png',{frameWidth:176,frameHeight:256});
         this.load.spritesheet('Repos','assets/SSRepos.png',{frameWidth:186,frameHeight:279});
@@ -112,7 +116,6 @@ class SceneOne extends Phaser.Scene {
         this.load.image('Brouillard','assets/BrouillardGood1.png');
         this.load.image('Brouillard2','assets/BrouillardGood2.png');
         this.load.image('Brouillard3','assets/BrouillardGood3.png');
-        //this.load.image('zone','assets/zone.png');
        
         //Vie Joueur
         this.load.image('interface','assets/interface.png');
@@ -125,6 +128,7 @@ class SceneOne extends Phaser.Scene {
         this.load.image('Potionvie3','assets/Potion1.png');
         this.load.image('Potionvie4','assets/Potion1.png');
         this.load.image('Potionvie5','assets/Potion1.png');
+        this.load.image('AtckBoss','assets/AttakBoss.png')
 
         //Ennemis
 
@@ -189,9 +193,7 @@ class SceneOne extends Phaser.Scene {
 
         //Spritesheet de Laake's Remedy
         player = this.physics.add.sprite(100, 1660, 'TestPlayer').setScale(0.4).setDepth(2).setSize(200,200).setOffset(50,25);
-        //loup = this.physics.add.sprite(1900, 1660, 'Loup').setScale(0.4).setDepth(2);
-        //vampire = this.physics.add.sprite(1410,1190,'Vamp').setDepth(2).setScale(0.4);
-        //rat = this.physics.add.sprite(2510,269,'Rat').setDepth(2).setScale(0.4);
+        Boss = this.physics.add.sprite(14158,182,'Larare').setScale(0.4).setDepth(2).setOffset(50,25);
 
         locker = this.physics.add.sprite(1108, 1490, 'cle').setScale(0.4).setDepth(2);
         locker.body.setAllowGravity(false);
@@ -208,6 +210,10 @@ class SceneOne extends Phaser.Scene {
         this.add.image(2880,0,'VilleDerriere').setScrollFactor(0.3).setOrigin(0).setDepth(0).setScrollFactor(0.40);
         this.add.image(11390,0,'VilleDerriere').setScrollFactor(0.3).setOrigin(0).setDepth(0).setScrollFactor(0.40);
         this.add.image(14100,0,'VilleDerriere').setScrollFactor(0.3).setOrigin(0).setDepth(0).setScrollFactor(0.40);
+
+        atkBoss1 = this.add.image(12364,10,'AtckBoss').setDepth(5).setScale(0.3);
+        atkBoss2 = this.add.image(13306,10,'AtckBoss').setDepth(5).setScale(0.3);
+        atkBoss3 = this.add.image(13930,10,'AtckBoss').setDepth(5).setScale(0.3);
 
 
        
@@ -239,9 +245,16 @@ class SceneOne extends Phaser.Scene {
         this.physics.add.collider(locker,Plateformes);
         this.physics.add.collider(player,Plateformes);
         this.physics.add.collider(player,Porte);
+        this.physics.add.collider(Boss,Mur);
+        this.physics.add.collider(Boss,Plateformes);
         this.physics.add.collider(this.loups,Mur);
         this.physics.add.collider(this.vamps,Mur);
         this.physics.add.collider(this.rats,Mur);
+        this.physics.add.collider(player,atkBoss1,GetKilledBoss);
+        this.physics.add.collider(player,atkBoss2,GetKilledBoss);
+        this.physics.add.collider(player,atkBoss3,GetKilledBoss);
+
+
 
 
         zone_Boss1 = this.add.zone(12418,658).setSize(850,200);
@@ -262,6 +275,9 @@ class SceneOne extends Phaser.Scene {
         this.physics.add.overlap(player,this.loups,GetKilledLoup,null,this);
         this.physics.add.overlap(player,this.vamps,GetKilledVamp,null,this);
         this.physics.add.overlap(player,this.rats,GetKilledRat,null,this);
+        this.physics.add.overlap(player,zone_Boss1,AttaqueBoss,null,this);
+        this.physics.add.overlap(player,zone_Boss2,AttaqueBoss,null,this);
+        this.physics.add.overlap(player,zone_Boss3,AttaqueBoss,null,this);
         this.physics.add.collider(player,locker,OuverturePorte);
 
 
@@ -270,7 +286,7 @@ class SceneOne extends Phaser.Scene {
 
         if(speedrun == true){
 
-            textTimer = this.add.text(122,98).setScrollFactor(0).setDepth(6).setTint(030303);
+            textTimer = this.add.text(122,98).setScrollFactor(0).setDepth(6);
 
             loopTimer = this.time.addEvent({delay : 1000, callback : onEvent,callbackScope : this,loop :true});
 
@@ -936,6 +952,74 @@ class SceneOne extends Phaser.Scene {
                                 //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
                             }
                         }
+
+                        if (bossattaque == true){
+                            atkBoss1.body.setVelocityY(400);
+                            atkBoss2.body.setVelocityY(400);
+                            atkBoss3.body.setVelocityY(400);
+                        }
+        }
+
+        function GetKilledBoss(player,loup){ 
+            //invincible = false;  
+           
+            console.log('oui ca marche')
+            //if (invincible == true){
+            //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
+            //    }         
+                            console.log(laakeHp);          
+                            console.log('tu');
+                            if (laakeHp == 5){
+                                potionVie.anims.play('health1',true);
+                                console.log('tu');}
+                             
+                           if (laakeHp == 4){
+                                potionVie.anims.play('health2',true);
+                                console.log('vas');
+                            }
+                           if (laakeHp == 3){
+                                potionVie.anims.play('health3',true);
+                               console.log('presque');
+                            }
+                           if (laakeHp == 2){
+                                potionVie.anims.play('health4',true);
+                               console.log('mourir');
+                               
+                            }
+                           if (laakeHp == 1){
+                                potionVie.anims.play('health5',true);
+                                gameOver = true;
+                                console.log('noob');
+                                //this.scene.restart();
+                            }
+                       if(invincible == false){
+                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           invincible = true ;
+                           laakeHp = laakeHp -1; 
+
+                           //viePleine3.setDepth(0);
+                           //vieVide3.setDepth(5)
+                           
+                            
+                            
+                            
+                            
+                        }
+                        if (loup.body.touching.up && player.body.touching.down){
+                            laakeHp = laakeHp + 1;
+                            loup.setVisible(false);
+                            loup.setVelocityX(0); 
+                            //loup.body.disableBody(true,true);
+                            loup.destroy();
+                            statut_Ennemi = false; 
+                            if (statut_Ennemi == true){
+                                ennemy_aggro = true;
+                                this.physics.moveToObject(loup, player, 200);
+                                
+                               
+                                //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
+                            }
+                        }
         }
                       
                    
@@ -952,6 +1036,14 @@ class SceneOne extends Phaser.Scene {
        //    zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
        //    tweens_ennemy.pause();
        //}
+
+    function AttaqueBoss ()
+      {
+          bossattaque = true;
+          zone_Boss1.body.debugBodyColor = zone_Boss1.body.touching.none ? 0x00ffff : 0xffff00;
+          zone_Boss2.body.debugBodyColor = zone_Boss2.body.touching.none ? 0x00ffff : 0xffff00;
+          zone_Boss3.body.debugBodyColor = zone_Boss3.body.touching.none ? 0x00ffff : 0xffff00;
+      }
 
         //function VampRush ()
         //{
