@@ -301,7 +301,7 @@ class SceneOne extends Phaser.Scene {
 
         function OuverturePorte(){
             cle = cle+1
-            console.log('ouvert!')
+            //console.log('ouvert!')
             locker.destroy();
             if (cle ==1){
                 Porte.setAlpha(0);
@@ -527,7 +527,7 @@ class SceneOne extends Phaser.Scene {
                     
             if (allowDoubleJump == true && keys.up.isDown){
                         player.setVelocityY(-300);
-                        console.log('jump');
+                        //console.log('jump');
                         doubleJumps = false;
                         allowDoubleJump = false;
             }
@@ -775,33 +775,36 @@ class SceneOne extends Phaser.Scene {
             //if (invincible == true){
             //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
             //    }         
-                            console.log(laakeHp);          
-                            console.log('tu');
+                            //console.log(laakeHp);          
+                            //console.log('tu');
                             if (laakeHp == 5){
                                 potionVie.anims.play('health1',true);
-                                console.log('tu');}
+                                //console.log('tu');
+                            }
                              
                            if (laakeHp == 4){
                                 potionVie.anims.play('health2',true);
-                                console.log('vas');
+                                //console.log('vas');
                             }
                            if (laakeHp == 3){
                                 potionVie.anims.play('health3',true);
-                               console.log('presque');
+                               //console.log('presque');
                             }
                            if (laakeHp == 2){
                                 potionVie.anims.play('health4',true);
-                               console.log('mourir');
+                               //console.log('mourir');
                                
                             }
                            if (laakeHp == 1){
                                 potionVie.anims.play('health5',true);
                                 gameOver = true;
-                                console.log('noob');
+                                //console.log('noob');
                                 //this.scene.restart();
                             }
                        if(invincible == false){
-                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           setTimeout(function(){invincible = false; 
+                            //console.log('invicible'+ invincible)
+                            ;}, 2000);
                            invincible = true ;
                            laakeHp = laakeHp -1; 
 
@@ -833,37 +836,39 @@ class SceneOne extends Phaser.Scene {
         function GetKilledVamp(player,vamp){ 
             //invincible = false;  
            
-            console.log('oui ca marche')
+            //console.log('oui ca marche')
             //if (invincible == true){
             //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
             //    }         
-                            console.log(laakeHp);          
-                            console.log('tu');
+                            //console.log(laakeHp);          
+                            //console.log('tu');
                             if (laakeHp == 5){
                                 potionVie.anims.play('health1',true);
-                                console.log('tu');}
+                                //console.log('tu');
+                            }
                              
                            if (laakeHp == 4){
                                 potionVie.anims.play('health2',true);
-                                console.log('vas');
+                                //console.log('vas');
                             }
                            if (laakeHp == 3){
                                 potionVie.anims.play('health3',true);
-                               console.log('presque');
+                               //console.log('presque');
                             }
                            if (laakeHp == 2){
                                 potionVie.anims.play('health4',true);
-                               console.log('mourir');
+                               //console.log('mourir');
                                
                             }
                            if (laakeHp == 1){
                                 potionVie.anims.play('health5',true);  
                                 gameOver = true;
-                                console.log('noob');
+                                //console.log('noob');
                                 //this.scene.restart();
                             }
                        if(invincible == false){
-                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           setTimeout(function(){invincible = false; //console.log('invicible'+ invincible);
+                        }, 2000);
                            invincible = true ;
                            laakeHp = laakeHp -1; 
 
@@ -895,37 +900,39 @@ class SceneOne extends Phaser.Scene {
         function GetKilledRat(player,rat){ 
             //invincible = false;  
            
-            console.log('oui ca marche')
+            //console.log('oui ca marche')
             //if (invincible == true){
             //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
             //    }         
-                            console.log(laakeHp);          
-                            console.log('tu');
+                            //console.log(laakeHp);          
+                            //console.log('tu');
                             if (laakeHp == 5){
                                 potionVie.anims.play('health1',true);
-                                console.log('tu');}
+                               // console.log('tu');
+                            }
                              
                            if (laakeHp == 4){
                                 potionVie.anims.play('health2',true);
-                                console.log('vas');
+                                //console.log('vas');
                             }
                            if (laakeHp == 3){
                                 potionVie.anims.play('health3',true);
-                               console.log('presque');
+                               //console.log('presque');
                             }
                            if (laakeHp == 2){
                                 potionVie.anims.play('health4',true);
-                               console.log('mourir');
+                               //console.log('mourir');
                                
                             }
                            if (laakeHp == 1){
                                 potionVie.anims.play('health5',true); 
                                 gameOver= true;
-                                console.log('noob');
+                                //console.log('noob');
                                 //this.scene.restart();
                             }
                        if(invincible == false){
-                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           setTimeout(function(){invincible = false; //console.log('invicible'+ invincible);
+                        }, 2000);
                            invincible = true ;
                            laakeHp = laakeHp -1; 
 
@@ -963,46 +970,45 @@ class SceneOne extends Phaser.Scene {
         function GetKilledBoss(player,loup){ 
             //invincible = false;  
            
-            console.log('oui ca marche')
+            //console.log('oui ca marche')
             //if (invincible == true){
             //    setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 1000);
             //    }         
-                            console.log(laakeHp);          
-                            console.log('tu');
+                            //console.log(laakeHp);          
+                            //console.log('tu');
                             if (laakeHp == 5){
                                 potionVie.anims.play('health1',true);
-                                console.log('tu');}
+                                //console.log('tu');
+                            }
                              
                            if (laakeHp == 4){
                                 potionVie.anims.play('health2',true);
-                                console.log('vas');
+                                //console.log('vas');
                             }
                            if (laakeHp == 3){
                                 potionVie.anims.play('health3',true);
-                               console.log('presque');
+                               //console.log('presque');
                             }
                            if (laakeHp == 2){
                                 potionVie.anims.play('health4',true);
-                               console.log('mourir');
+                               //console.log('mourir');
                                
                             }
                            if (laakeHp == 1){
                                 potionVie.anims.play('health5',true);
                                 gameOver = true;
-                                console.log('noob');
+                                //console.log('noob');
                                 //this.scene.restart();
                             }
                        if(invincible == false){
-                           setTimeout(function(){invincible = false; console.log('invicible'+ invincible);}, 2000);
+                           setTimeout(function(){invincible = false; 
+                            //console.log('invicible'+ invincible);
+                        }, 2000);
                            invincible = true ;
                            laakeHp = laakeHp -1; 
 
                            //viePleine3.setDepth(0);
-                           //vieVide3.setDepth(5)
-                           
-                            
-                            
-                            
+                           //vieVide3.setDepth(5)   
                             
                         }
                         if (loup.body.touching.up && player.body.touching.down){
@@ -1020,7 +1026,8 @@ class SceneOne extends Phaser.Scene {
                                 //zone_Loup.body.debugBodyColor = zone_Loup.body.touching.none ? 0x00ffff : 0xffff00;
                             }
                         }
-        }
+    
+    }
                       
                    
 
@@ -1070,7 +1077,7 @@ class SceneOne extends Phaser.Scene {
             if (remede == 1){
                 Brouillard.setAlpha(0);
                 brouillard2.setDepth(2);
-                console.log('potion1');
+                //console.log('potion1');
                 ingredients.disableBody(true,true);
                 ingredients.body.destroy();
        
@@ -1084,4 +1091,5 @@ class SceneOne extends Phaser.Scene {
             }
 
         }
+    
 
