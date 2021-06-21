@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Laake's remedy</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <script src="EcranTitre.js"></script>
     <script src="SceneOne.js"></script>
     <style type="text/css">
         body {
@@ -29,7 +30,7 @@ var config = {
             debug: true
         }  
     },
-    scene: [SceneOne]
+    scene: [EcranTitre,SceneOne]
 };
 
 var game = new Phaser.Game(config);
